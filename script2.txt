@@ -1,0 +1,20 @@
+#!/bin/bash
+
+counter=0
+
+while true; do
+    read -p "Enter the counter value: " NUM
+    echo
+
+    if [ $NUM -eq $counter ]; then
+        echo "Correct! The value of the counter is $counter."
+        break
+    else
+        echo "Incorrect, try again."
+        echo "Looping ....."
+        sleep 3
+        echo
+    fi
+done
+
+echo "GOOD."

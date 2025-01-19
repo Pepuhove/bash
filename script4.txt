@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Installing Dependencies
+echo "################################################"
+echo "Installing packages."
+echo "################################################"
+
+# List of packages to install
+PACKAGES="sudo yum install wget httpd unzip vim -y"
+
+# Execute the package installation command and suppress the output
+$PACKAGES > /dev/null
+
+# Command to clean up temporary files, output suppressed
+CLEAN="rm -rf /tmp/webfiles > /dev/null"
+echo
+
+# Start and Enable HTTPD Service
+echo "################################################"
+
+# Start the Apache HTTP server
+sudo systemctl start httpd
+
+# Enable the Apache HTTP server to start on boot
+sudo systemctl enable httpd
+
+# Create a temporary directory to store web files
+mkdir -p /tmp/webfiles
+
+# Change directory to the temporary directory
+cd /tmp/webfiles
+
+# Download the file from the URL provided as the first argument ($1) to the script, suppressing output
+wget $1 > /dev/null
+
+# Unzip the downloaded file, assuming it's a .zip file with the name provided as the second argument ($2), suppressing output
+unzip $2.zip > /dev/null
+
+# Copy the extracted files to the Apache web server's root directory
+sudo cp -r $2/* /var/www/html/ >/dev/null
+
+# Restart the Apache HTTP server to apply any changes
+echo "################################################"
+sudo systemctl restart httpd
+echo "################################################"
+
+# Clean Up Temporary Files
+echo "CLEAN UP"
+echo "################################################"
+
+# Execute the clean-up command to remove the temporary directory
+$CLEAN
+echo "################################################"

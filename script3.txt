@@ -1,0 +1,57 @@
+
+#!/bin/bash
+
+name="Pepu"
+age=30
+
+# Output the name
+echo "Name: $name"
+touch info
+
+# Check if the person is a minor or an adult
+if [ "$age" -lt 18 ]; then
+    echo "$name, you are a minor."
+else
+    echo "$name, you are an adult."
+
+    # Prompt the user for their favorite color
+    read -p "Enter your favourite color: " color
+    echo "Your favourite color is $color"
+echo "$name $age $color" >> info
+fi
+
+# Pause for 3 seconds
+sleep 3
+echo ""
+#cat info
+echo "Continuing ...."
+# Continue the script
+echo "Counting to 5:"
+
+# Create files to store odd and even numbers
+touch Odds.txt Evens.txt
+
+# Loop through numbers 1 to 5
+for i in {1..5}; do
+    echo ""
+
+    if (( i % 2 == 0 )); then
+        echo "$i is an even number"
+        echo "$i" >> Evens.txt
+    else
+        echo "$i is an odd number"
+        echo "$i" >> Odds.txt
+    fi
+
+    sleep 2
+done
+
+# Output results
+echo ""
+echo "Odd numbers are:"
+cat Odds.txt
+echo ""
+echo "Even numbers are:"
+cat Evens.txt
+
+echo "DONE"
