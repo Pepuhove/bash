@@ -1,0 +1,89 @@
+#!/bin/bash
+
+# Check if URL and filename arguments are provided
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <URL> <filename_without_extension>"
+  exit 1
+fi
+
+URL=$1
+FILENAME=$2
+TMP_DIR="/tmp/webfiles"
+WEB_DIR="/var/www/html"
+
+# Updating and Installing Dependencies
+echo "################################################"
+echo "Updating package list and installing dependencies..."
+echo "################################################"
+
+sudo apt update -y > /dev/null 2>&1
+sudo apt install wget apache2 unzip vim -y > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "Failed to install required packages. Exiting."
+  exit 1
+fi
+
+# Start and Enable Apache Service
+echo "################################################"
+echo "Starting and enabling Apache service..."
+echo "################################################"
+
+sudo systemctl start apache2
+sudo systemctl enable apache2
+if [ $? -ne 0 ]; then
+  echo "Failed to start or enable Apache. Exiting."
+  exit 1
+fi
+
+# Create Temporary Directory
+echo "################################################"
+echo "Preparing web files..."
+echo "################################################"
+
+mkdir -p $TMP_DIR
+cd $TMP_DIR
+
+# Download and Extract Web Files
+wget $URL -O "$FILENAME.zip" > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "Failed to download the file from $URL. Exiting."
+  exit 1
+fi
+
+unzip "$FILENAME.zip" > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "Failed to unzip $FILENAME.zip. Exiting."
+  exit 1
+fi
+
+# Copy Files to Web Directory
+sudo cp -r $TMP_DIR/$FILENAME/* $WEB_DIR/ > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "Failed to copy files to $WEB_DIR. Exiting."
+  exit 1
+fi
+
+# Restart Apache Service
+echo "################################################"
+echo "Restarting Apache service..."
+echo "################################################"
+
+sudo systemctl restart apache2
+if [ $? -ne 0 ]; then
+  echo "Failed to restart Apache service. Exiting."
+  exit 1
+fi
+
+# Clean Up Temporary Files
+echo "################################################"
+echo "Cleaning up temporary files..."
+echo "################################################"
+
+rm -rf $TMP_DIR
+if [ $? -ne 0 ]; then
+  echo "Failed to clean up temporary files."
+fi
+
+echo "################################################"
+echo "Deployment completed successfully!"
+echo "################################################"
