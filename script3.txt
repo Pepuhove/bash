@@ -24,15 +24,15 @@ fi
 sleep 3
 echo ""
 #cat info
-echo "Continuing ...."
+echo "Continuing .."
 # Continue the script
 echo "Counting to 5:"
 
 # Create files to store odd and even numbers
 touch Odds.txt Evens.txt
 
-# Loop through numbers 1 to 5
-for i in {1..5}; do
+# Loop through numbers 1 to 3
+for i in {1..3}; do
     echo ""
 
     if (( i % 2 == 0 )); then
