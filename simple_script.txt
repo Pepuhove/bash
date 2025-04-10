@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo "Whats your name?"
+read name
+echo "########################################"
+echo "Hi $name, I can see that you are using $(uname) machine to run this program. Also today is $(date) , you are in this directory $(pwd)."
+echo "######################################"
+echo "Your machine has been running for $(uptime)."
+echo
+
+num=10
+echo "Guess a number:"
+read guess
+
+if [ "$guess" -eq "$num" ]; then
+    echo "The number is equal to the guess!"
+else
+    echo "Wrong guess. Try again!"
+fi
